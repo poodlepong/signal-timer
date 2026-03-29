@@ -18,66 +18,88 @@ body { background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-
 .screen { display:none; min-height:100vh; flex-direction:column; }
 .screen.active { display:flex; }
 
-/* HOME */
-.home-header { padding:60px 20px 14px; background:#d3defd; position:sticky; top:0; z-index:10; border-bottom:1px solid #b8c8f8; }
-.home-header h1 { font-family:'Gmarket Sans',sans-serif; font-size:22px; font-weight:700; color:#1a2a5e; letter-spacing:-0.3px; }
-.home-header p { color:#5a6a9e; font-size:12px; margin-top:2px; }
+/* HOME HEADER */
+.home-header {
+  padding:60px 20px 14px; background:#d3defd;
+  position:sticky; top:0; z-index:10;
+  border-bottom:1px solid #b8c8f8;
+  display:flex; align-items:flex-end; justify-content:space-between;
+}
+.home-header-left h1 { font-family:'Gmarket Sans',sans-serif; font-size:22px; font-weight:700; color:#1a2a5e; letter-spacing:-0.3px; }
+.home-header-left p { color:#5a6a9e; font-size:12px; margin-top:2px; }
+.edit-toggle-btn {
+  background:none; border:1px solid #7a9ae0; border-radius:20px;
+  padding:6px 14px; font-size:13px; color:#1a2a5e;
+  font-family:'Noto Sans KR',sans-serif; cursor:pointer; font-weight:600;
+  flex-shrink:0; margin-bottom:2px;
+}
+.edit-toggle-btn.active { background:#1a2a5e; color:#fff; border-color:#1a2a5e; }
 
+/* REORDER BAR */
+.reorder-bar { display:none; background:var(--text); color:#fff; text-align:center; font-size:12px; font-weight:500; padding:8px; }
+body.edit-mode .reorder-bar { display:block; }
+
+/* LIST */
 .signal-list { flex:1; padding:16px 16px 100px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; }
 .empty-state { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center; padding:40px; color:var(--muted); font-size:14px; line-height:1.6; }
 .empty-icon { font-size:40px; opacity:0.2; margin-bottom:4px; }
 
-/* REORDER */
-.reorder-bar { display:none; background:var(--text); color:#fff; text-align:center; font-size:12px; font-weight:500; padding:8px; }
-body.reorder .reorder-bar { display:block; }
-.drag-handle { display:none; align-items:center; padding:0 14px 0 4px; color:var(--muted); font-size:18px; cursor:grab; flex-shrink:0; touch-action:none; }
-body.reorder .drag-handle { display:flex; }
-body.reorder .card-wrapper { display:flex; align-items:center; background:var(--card); border-radius:16px; box-shadow:var(--shadow); }
-body.reorder .signal-card { box-shadow:none; border-radius:0 16px 16px 0; flex:1; }
+/* DRAG HANDLE */
+.drag-handle { display:none; align-items:center; justify-content:center; width:36px; flex-shrink:0; color:var(--muted); font-size:20px; cursor:grab; touch-action:none; background:var(--card); border-radius:16px 0 0 16px; }
+body.edit-mode .drag-handle { display:flex; }
+body.edit-mode .card-wrapper { display:flex; align-items:stretch; background:var(--card); border-radius:16px; box-shadow:var(--shadow); }
+body.edit-mode .signal-card { box-shadow:none; border-radius:0 16px 16px 0; flex:1; }
 
 /* CARD */
-.card-wrapper { border-radius:16px; transition:transform 0.18s,box-shadow 0.18s,opacity 0.18s; touch-action:pan-y; }
-.card-wrapper.is-dragging { opacity:0.55; transform:scale(1.03); box-shadow:0 12px 32px rgba(0,0,0,0.14); z-index:99; }
+.card-wrapper { border-radius:16px; transition:opacity 0.18s; touch-action:pan-y; }
+.card-wrapper.is-dragging { opacity:0.5; }
 
-.signal-card { background:var(--card); border-top:3.5px solid transparent; border-radius:16px; padding:14px 16px 13px; box-shadow:var(--shadow); cursor:pointer; transition:border-color 0.35s,transform 0.12s; user-select:none; }
-.signal-card:active { transform:scale(0.985); }
+.signal-card {
+  background:var(--card); border-top:3.5px solid #e0e0e0;
+  border-radius:16px; padding:13px 16px 13px;
+  box-shadow:var(--shadow); cursor:pointer;
+  transition:border-color 0.35s; user-select:none; position:relative;
+}
+.signal-card:active { opacity:0.9; }
 .signal-card.green { border-top-color:var(--green); }
 .signal-card.red   { border-top-color:var(--red); }
 
-.pin-badge { display:inline-flex; align-items:center; gap:3px; font-size:10px; color:#f0a500; background:#f0a50014; border-radius:100px; padding:2px 7px; margin-bottom:7px; font-weight:500; }
+.pin-badge { display:inline-flex; align-items:center; gap:3px; font-size:10px; color:#f0a500; background:#f0a50014; border-radius:100px; padding:2px 7px; margin-bottom:6px; font-weight:500; }
 
 .card-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; }
 .card-name-row { display:flex; align-items:center; gap:9px; }
 .card-photo { width:30px; height:30px; border-radius:7px; object-fit:cover; flex-shrink:0; border:1px solid var(--sep); }
 .card-name { font-family:'Gmarket Sans',sans-serif; font-size:15px; font-weight:700; color:var(--text); }
-.card-del { background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer; padding:2px 4px; }
 
-.card-status { display:flex; align-items:center; gap:8px; }
+.alert-toggle { background:none; border:none; font-size:17px; cursor:pointer; padding:2px 4px; opacity:0.3; transition:opacity 0.2s; flex-shrink:0; }
+.alert-toggle.on { opacity:1; }
+
+.card-status { display:flex; align-items:center; gap:8px; margin-bottom:9px; }
 .status-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
 .signal-card.green .status-dot { background:var(--green); box-shadow:0 0 0 3px rgba(52,199,89,0.18); animation:pg 2s infinite; }
-.signal-card.red   .status-dot { background:var(--red);   box-shadow:0 0 0 3px rgba(255,59,48,0.18);  animation:pr 2s infinite; }
+.signal-card.red   .status-dot { background:var(--red);   box-shadow:0 0 0 3px rgba(255,59,48,0.18); animation:pr 2s infinite; }
 @keyframes pg { 0%,100%{box-shadow:0 0 0 3px rgba(52,199,89,0.15)} 50%{box-shadow:0 0 0 5px rgba(52,199,89,0.28)} }
 @keyframes pr { 0%,100%{box-shadow:0 0 0 3px rgba(255,59,48,0.15)} 50%{box-shadow:0 0 0 5px rgba(255,59,48,0.28)} }
-
 .status-text { font-size:14px; font-weight:700; }
 .signal-card.green .status-text { color:var(--green); }
 .signal-card.red   .status-text { color:var(--red); }
 .status-remain { font-size:12px; color:var(--muted); margin-left:auto; }
 
-.card-cycles { margin-top:9px; display:flex; gap:6px; flex-wrap:wrap; }
+.card-cycles { display:flex; gap:6px; flex-wrap:wrap; }
 .cycle-badge { font-size:11px; padding:3px 9px; border-radius:100px; font-weight:500; }
 .cycle-badge.g { background:var(--green-t); color:#1a8c3a; }
 .cycle-badge.r { background:var(--red-t);   color:#c4291f; }
 .card-memo { margin-top:6px; font-size:11px; color:var(--muted); line-height:1.4; }
 
-/* BUS STRIP on card */
-.bus-strip { margin-top:10px; border-top:1px solid var(--sep); padding-top:9px; display:flex; flex-direction:column; gap:5px; }
-.bus-row { display:flex; align-items:center; gap:8px; }
-.bus-num { font-size:12px; font-weight:700; background:#e8f0fe; color:#1a56d6; padding:2px 8px; border-radius:100px; flex-shrink:0; }
-.bus-arrive { font-size:12px; color:var(--sub); flex:1; }
-.bus-alert-ok { font-size:11px; color:var(--green); font-weight:600; }
-.bus-loading { font-size:11px; color:var(--muted); font-style:italic; }
+/* DELETE BUTTON - only in edit mode, bottom right */
+.card-del {
+  display:none; position:absolute; bottom:10px; right:12px;
+  background:none; border:none; font-size:18px; font-weight:900;
+  color:#1c1c1e; cursor:pointer; padding:4px 6px; line-height:1;
+}
+body.edit-mode .card-del { display:block; }
 
+/* FAB */
 .fab { position:fixed; bottom:30px; right:20px; width:54px; height:54px; border-radius:50%; background:var(--text); color:#fff; border:none; font-size:24px; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(0,0,0,0.18); transition:transform 0.18s; z-index:100; }
 .fab:active { transform:scale(0.91); }
 
@@ -136,43 +158,7 @@ body.reorder .signal-card { box-shadow:none; border-radius:0 16px 16px 0; flex:1
 .save-btn { width:100%; padding:14px; border-radius:14px; border:none; background:var(--text); color:#fff; font-size:15px; font-weight:700; font-family:'Gmarket Sans',sans-serif; cursor:pointer; opacity:0; pointer-events:none; transition:opacity 0.35s; }
 .save-btn.on { opacity:1; pointer-events:all; }
 
-/* BUS SEARCH SCREEN */
-#busSearch { background:#fff; padding:56px 22px 40px; }
-#busSearch h2 { font-family:'Gmarket Sans',sans-serif; font-size:22px; font-weight:700; margin-bottom:6px; }
-#busSearch .subtitle { color:var(--sub); font-size:13px; margin-bottom:24px; line-height:1.5; }
-.bus-search-row { display:flex; gap:8px; margin-bottom:16px; }
-.bus-search-input { flex:1; background:var(--bg); border:1px solid var(--sep); border-radius:12px; padding:13px 15px; font-size:16px; color:var(--text); font-family:'Noto Sans KR',sans-serif; outline:none; }
-.bus-search-input:focus { border-color:var(--blue); }
-.bus-search-btn { background:var(--text); color:#fff; border:none; border-radius:12px; padding:0 18px; font-size:14px; font-weight:700; font-family:'Gmarket Sans',sans-serif; cursor:pointer; white-space:nowrap; }
-.bus-stop-list { display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; }
-.bus-stop-item { background:var(--bg); border:1px solid var(--sep); border-radius:12px; padding:13px 15px; cursor:pointer; transition:border-color 0.15s; }
-.bus-stop-item:active { border-color:var(--blue); }
-.bus-stop-name { font-size:14px; font-weight:700; color:var(--text); margin-bottom:3px; }
-.bus-stop-id { font-size:11px; color:var(--muted); }
-.bus-stop-empty { text-align:center; color:var(--muted); font-size:13px; padding:40px 0; }
-
-/* BUS LINE SELECT */
-#busLineSelect { background:#fff; padding:56px 22px 40px; }
-#busLineSelect h2 { font-family:'Gmarket Sans',sans-serif; font-size:22px; font-weight:700; margin-bottom:6px; }
-#busLineSelect .subtitle { color:var(--sub); font-size:13px; margin-bottom:24px; }
-.bus-line-list { display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; }
-.bus-line-item { background:var(--bg); border:1px solid var(--sep); border-radius:12px; padding:13px 15px; cursor:pointer; display:flex; align-items:center; gap:12px; }
-.bus-line-item:active { border-color:var(--blue); }
-.bus-line-num { font-size:15px; font-weight:700; background:#e8f0fe; color:#1a56d6; padding:4px 12px; border-radius:100px; }
-.bus-line-dest { font-size:13px; color:var(--sub); }
-.bus-line-selected { border-color:var(--blue); background:#f0f6ff; }
-.bus-line-check { color:var(--blue); font-size:18px; margin-left:auto; }
-.bus-line-done { width:100%; padding:14px; border-radius:14px; border:none; background:var(--text); color:#fff; font-size:15px; font-weight:700; font-family:'Gmarket Sans',sans-serif; cursor:pointer; margin-top:16px; flex-shrink:0; }
-
-/* ALERT SETUP */
-.alert-setup { background:var(--bg); border:1px solid var(--sep); border-radius:12px; padding:14px 16px; margin-bottom:18px; }
-.alert-setup-title { font-size:13px; font-weight:700; margin-bottom:10px; }
-.alert-row { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
-.alert-row label { font-size:13px; color:var(--sub); }
-.alert-row input[type=number] { width:70px; background:#fff; border:1px solid var(--sep); border-radius:8px; padding:6px 10px; font-size:14px; text-align:center; outline:none; }
-.alert-row select { background:#fff; border:1px solid var(--sep); border-radius:8px; padding:6px 10px; font-size:13px; outline:none; }
-
-/* SHEET */
+/* EDIT SHEET */
 .sheet-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.25); z-index:200; align-items:flex-end; }
 .sheet-overlay.open { display:flex; }
 .sheet { background:#fff; border-radius:22px 22px 0 0; width:100%; max-height:92vh; overflow-y:auto; padding:18px 22px 46px; }
@@ -189,15 +175,16 @@ textarea.sheet-input { resize:none; height:68px; }
 .photo-del { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.45); color:#fff; border:none; border-radius:50%; width:26px; height:26px; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .photo-empty { padding:18px; display:flex; flex-direction:column; align-items:center; gap:5px; color:var(--muted); font-size:13px; }
 #photoInput { display:none; }
+.alert-setup { background:var(--bg); border:1px solid var(--sep); border-radius:12px; padding:14px 16px; margin-bottom:18px; }
+.alert-setup-title { font-size:13px; font-weight:700; margin-bottom:10px; color:var(--text); }
+.alert-row { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--sub); }
+.alert-row input[type=number] { width:60px; background:#fff; border:1px solid var(--sep); border-radius:8px; padding:6px 10px; font-size:14px; text-align:center; outline:none; }
 .sheet-actions { display:flex; flex-direction:column; gap:9px; }
 .sheet-save { width:100%; padding:14px; border-radius:13px; border:none; background:var(--text); color:#fff; font-size:15px; font-weight:700; font-family:'Gmarket Sans',sans-serif; cursor:pointer; }
 .sheet-btn { width:100%; padding:13px; border-radius:13px; border:1.5px solid var(--sep); background:var(--bg); color:var(--text); font-size:14px; font-weight:600; font-family:'Noto Sans KR',sans-serif; cursor:pointer; }
 .sheet-btn.pin-on { border-color:#f0a500; background:#fffbee; color:#b07a00; }
 .sheet-btn.danger { border-color:#ffccc9; background:#fff5f4; color:#c4291f; }
-.sheet-btn.bus-on { border-color:var(--blue); background:#f0f6ff; color:var(--blue); }
 .sheet-divider { border:none; border-top:1px solid var(--sep); margin:4px 0; }
-.report-title { font-size:11px; color:var(--muted); margin-bottom:7px; }
-.report-btn { width:100%; background:var(--bg); border:1px solid var(--sep); border-radius:11px; padding:12px 15px; font-size:13px; color:var(--sub); cursor:pointer; text-align:left; font-family:'Noto Sans KR',sans-serif; margin-bottom:7px; }
 
 /* TOAST */
 .toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(16px); background:rgba(28,28,30,0.88); color:#fff; padding:9px 18px; border-radius:100px; font-size:13px; font-weight:500; opacity:0; transition:all 0.28s; z-index:400; white-space:nowrap; backdrop-filter:blur(8px); }
@@ -209,10 +196,13 @@ textarea.sheet-input { resize:none; height:68px; }
 <!-- HOME -->
 <div class="screen active" id="home">
   <div class="home-header">
-    <h1>🚦 신호등 타이머</h1>
-    <p>집에서 신호 확인하고 버스 타자</p>
+    <div class="home-header-left">
+      <h1>🚦 신호등 타이머</h1>
+      <p>집에서 신호 확인하고 버스 타자</p>
+    </div>
+    <button class="edit-toggle-btn" id="editToggleBtn" onclick="toggleEditMode()">편집</button>
   </div>
-  <div class="reorder-bar">≡ 핸들을 잡고 드래그해서 순서를 바꾸세요 &nbsp;·&nbsp; <span style="text-decoration:underline;cursor:pointer" onclick="exitReorder()">완료</span></div>
+  <div class="reorder-bar">≡ 핸들을 잡고 드래그해서 순서 변경 &nbsp;·&nbsp; <span style="text-decoration:underline;cursor:pointer" onclick="toggleEditMode()">완료</span></div>
   <div class="signal-list" id="signalList">
     <div class="empty-state" id="emptyState">
       <div class="empty-icon">🚦</div>
@@ -265,29 +255,6 @@ textarea.sheet-input { resize:none; height:68px; }
   </div>
 </div>
 
-<!-- BUS STOP SEARCH -->
-<div class="screen" id="busSearch" style="background:#fff; padding:56px 22px 40px;">
-  <button class="back-btn-light" id="busSearchBack">‹ 뒤로</button>
-  <h2>정류장 검색</h2>
-  <p class="subtitle">버스 정류장 이름을 입력하세요<br>예: 성북구청, 보문역</p>
-  <div class="bus-search-row">
-    <input class="bus-search-input" id="busSearchInput" type="text" placeholder="정류장 이름 입력">
-    <button class="bus-search-btn" onclick="searchBusStop()">검색</button>
-  </div>
-  <div class="bus-stop-list" id="busStopList">
-    <div class="bus-stop-empty">정류장 이름으로 검색해보세요</div>
-  </div>
-</div>
-
-<!-- BUS LINE SELECT -->
-<div class="screen" id="busLineSelect" style="background:#fff; padding:56px 22px 40px;">
-  <button class="back-btn-light" onclick="go('busSearch')">‹ 뒤로</button>
-  <h2 id="busLineTitle">노선 선택</h2>
-  <p class="subtitle">이 정류장에서 탈 버스를 선택하세요<br>(여러 개 선택 가능)</p>
-  <div class="bus-line-list" id="busLineList"></div>
-  <button class="bus-line-done" onclick="saveBusLines()">선택 완료</button>
-</div>
-
 <!-- EDIT SHEET -->
 <div class="sheet-overlay" id="sheet">
   <div class="sheet">
@@ -309,26 +276,17 @@ textarea.sheet-input { resize:none; height:68px; }
       </div>
     </div>
     <input type="file" id="photoInput" accept="image/*" onchange="onPhoto(event)">
-
-    <!-- alert setup -->
     <div class="sheet-label">알림 설정</div>
     <div class="alert-setup">
-      <div class="alert-setup-title">🔔 파란불 되기 전에 알림</div>
+      <div class="alert-setup-title">🔔 파란불 되기 전 알림</div>
       <div class="alert-row">
-        <label>파란불 <input type="number" id="alertSec" min="5" max="120" value="30"> 초 전에 알림</label>
+        파란불 <input type="number" id="alertSec" min="5" max="120" value="30"> 초 전에 알림
       </div>
     </div>
-
     <div class="sheet-actions">
       <button class="sheet-save" onclick="saveEdit()">저장하기</button>
       <button class="sheet-btn" onclick="remeasure()">⏱ 신호 재측정</button>
       <button class="sheet-btn" id="pinBtn" onclick="togglePin()">📌 홈 화면 상단 고정</button>
-      <button class="sheet-btn bus-on" id="busLinkBtn" onclick="openBusSearch()">🚌 버스 연동 설정</button>
-      <div class="sheet-divider"></div>
-      <div class="report-title">데이터 신고</div>
-      <button class="report-btn" onclick="report('cycle')">⏱ 신호 주기가 달라요</button>
-      <button class="report-btn" onclick="report('wrong')">❌ 빨간/파란이 반대예요</button>
-      <button class="report-btn" onclick="report('moved')">🚧 신호등 위치가 바뀌었어요</button>
       <div class="sheet-divider"></div>
       <button class="sheet-btn danger" onclick="delFromSheet()">🗑 삭제</button>
     </div>
@@ -338,37 +296,49 @@ textarea.sheet-input { resize:none; height:68px; }
 <div class="toast" id="toast"></div>
 
 <script>
-const BUS_API_KEY = '5fa7e8cde55223752d15e5592774b68567614d4c2afc4fb2988ea7ab5d3cba86';
-const CORS_PROXY = 'https://corsproxy.io/?';
-
 // ── STATE ──
 let sigs = JSON.parse(localStorage.getItem('sigs') || '[]');
 if (!sigs.length) {
   const old = localStorage.getItem('signals');
-  if (old) { sigs = JSON.parse(old); sigs.forEach(s => { s.pinned=s.pinned||false; s.memo=s.memo||''; s.photo=s.photo||null; s.reports=s.reports||[]; s.bus=s.bus||null; s.alertSec=s.alertSec||30; }); save(); }
+  if (old) {
+    sigs = JSON.parse(old);
+    sigs.forEach(s => {
+      s.pinned = s.pinned||false; s.memo = s.memo||'';
+      s.photo = s.photo||null; s.alertSec = s.alertSec||30;
+      s.alertOn = s.alertOn||false; s.reports = s.reports||[];
+    });
+    save();
+  }
 }
 
 let loc=null, tapLog=[], timers={}, liveIv=null;
-let editId=null, isRem=false, pendPhoto=null, reorderMode=false;
-let busTimers={}, alertTimers={};
-// bus search state
-let selectedStopId=null, selectedStopName=null, tempSelectedLines=[];
+let editId=null, isRem=false, pendPhoto=null;
+let editModeOn=false, reorderMode=false;
+let alertTimers={};
 
 // ── SCREENS ──
-function go(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
-function showHome() { go('home'); render(); tick(); startBusRefresh(); }
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showHome() { go('home'); render(); tick(); }
+
 function showRegister() {
   document.getElementById('signalName').value=''; loc=null;
   document.getElementById('locationBox').className='location-box';
   document.getElementById('locationText').textContent='탭해서 현재 위치 가져오기';
-  document.getElementById('nextBtn').disabled=true; go('register');
+  document.getElementById('nextBtn').disabled=true;
+  go('register');
 }
+
 function goMeasure(rem) {
   isRem=rem;
-  const name=rem?(sigs.find(s=>s.id===editId)?.name||'재측정'):document.getElementById('signalName').value.trim();
-  if(!rem&&!name)return;
-  document.getElementById('measureTitle').textContent=name+' 측정';
-  document.getElementById('measureBack').onclick=rem?()=>{closeSheet();showHome();}:()=>showRegister();
+  const name = rem ? (sigs.find(s=>s.id===editId)?.name||'재측정') : document.getElementById('signalName').value.trim();
+  if (!rem && !name) return;
+  document.getElementById('measureTitle').textContent = name+' 측정';
+  document.getElementById('measureBack').onclick = rem ? ()=>{closeSheet();showHome();} : ()=>showRegister();
   tapLog=[]; if(liveIv){clearInterval(liveIv);liveIv=null;}
   document.getElementById('logArea').innerHTML='';
   document.getElementById('progLabel').textContent='신호를 눌러 측정을 시작하세요';
@@ -382,65 +352,106 @@ function goMeasure(rem) {
   dotUpdate(); closeSheet(); go('measure');
 }
 
+// ── EDIT MODE ──
+function toggleEditMode() {
+  editModeOn = !editModeOn;
+  reorderMode = editModeOn;
+  document.body.classList.toggle('edit-mode', editModeOn);
+  const btn = document.getElementById('editToggleBtn');
+  btn.textContent = editModeOn ? '완료' : '편집';
+  btn.classList.toggle('active', editModeOn);
+  if (!editModeOn) { render(); tick(); }
+}
+
 // ── LOCATION ──
 function getLocation() {
-  const t=document.getElementById('locationText'),b=document.getElementById('locationBox');
+  const t=document.getElementById('locationText'), b=document.getElementById('locationBox');
   t.textContent='가져오는 중...';
   navigator.geolocation.getCurrentPosition(p=>{
     loc={lat:p.coords.latitude,lng:p.coords.longitude};
     b.className='location-box got';
     t.textContent=`📌 완료 (${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)})`;
-  },()=>{b.className='location-box err';t.textContent='위치 없이 계속 가능해요';loc=null;});
+  }, ()=>{b.className='location-box err';t.textContent='위치 없이 계속 가능해요';loc=null;});
 }
-document.getElementById('signalName').addEventListener('input',()=>{
-  document.getElementById('nextBtn').disabled=!document.getElementById('signalName').value.trim();
+document.getElementById('signalName').addEventListener('input', ()=>{
+  document.getElementById('nextBtn').disabled = !document.getElementById('signalName').value.trim();
 });
 
 // ── MEASURE ──
 function tap(type) {
-  const now=Date.now();
-  const btn=document.getElementById(type==='green'?'gbtn':'rbtn');
-  btn.classList.remove('flash');void btn.offsetWidth;btn.classList.add('flash');
+  const now = Date.now();
+  const btn = document.getElementById(type==='green'?'gbtn':'rbtn');
+  btn.classList.remove('flash'); void btn.offsetWidth; btn.classList.add('flash');
   document.getElementById('liveFb').className='live-feedback '+(type==='green'?'g-on':'r-on');
-  document.getElementById('liveLabel').textContent=type==='green'?'파란불':'빨간불';
-  if(liveIv)clearInterval(liveIv);
-  liveIv=setInterval(()=>{document.getElementById('liveTimer').textContent=Math.round((Date.now()-now)/1000)+'s';},200);
-  if(tapLog.length){const p=tapLog[tapLog.length-1];addLog(p.type,(p.type==='green'?'파란불':'빨간불')+' '+((now-p.time)/1000).toFixed(1)+'초');}
-  else addLog(type,(type==='green'?'파란불':'빨간불')+' 시작');
-  tapLog.push({type,time:now});dotUpdate();
+  document.getElementById('liveLabel').textContent = type==='green'?'파란불':'빨간불';
+  if(liveIv) clearInterval(liveIv);
+  liveIv = setInterval(()=>{ document.getElementById('liveTimer').textContent=Math.round((Date.now()-now)/1000)+'s'; }, 200);
+  if(tapLog.length) {
+    const p=tapLog[tapLog.length-1];
+    addLog(p.type,(p.type==='green'?'파란불':'빨간불')+' '+((now-p.time)/1000).toFixed(1)+'초');
+  } else addLog(type,(type==='green'?'파란불':'빨간불')+' 시작');
+  tapLog.push({type,time:now}); dotUpdate();
   document.getElementById('measureInst').innerHTML=`신호가 <strong>${type==='green'?'빨간불':'파란불'}</strong>으로 바뀌면 버튼을 누르세요`;
   if(tapLog.length>=3){document.getElementById('saveBtn').classList.add('on');document.getElementById('progLabel').textContent='충분해요! 저장하거나 계속 측정하세요';}
   else document.getElementById('progLabel').textContent=`신호 ${3-tapLog.length}번 더 바뀌면 저장 가능해요`;
 }
-function addLog(type,text){const a=document.getElementById('logArea');const d=document.createElement('div');d.className='log-item';d.innerHTML=`<div class="log-dot ${type==='green'?'g':'r'}"></div><span>${text}</span>`;a.appendChild(d);a.scrollTop=a.scrollHeight;}
-function dotUpdate(){document.querySelectorAll('.progress-dot').forEach((d,i)=>d.classList.toggle('done',i<tapLog.length));}
-function calcCycles(){let g=[],r=[];for(let i=1;i<tapLog.length;i++){const dur=(tapLog[i].time-tapLog[i-1].time)/1000;(tapLog[i-1].type==='green'?g:r).push(dur);}const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):null;return{green:avg(g),red:avg(r)};}
+
+function addLog(type,text){
+  const a=document.getElementById('logArea');
+  const d=document.createElement('div'); d.className='log-item';
+  d.innerHTML=`<div class="log-dot ${type==='green'?'g':'r'}"></div><span>${text}</span>`;
+  a.appendChild(d); a.scrollTop=a.scrollHeight;
+}
+
+function dotUpdate(){
+  document.querySelectorAll('.progress-dot').forEach((d,i)=>d.classList.toggle('done',i<tapLog.length));
+}
+
+function calcCycles(){
+  let g=[],r=[];
+  for(let i=1;i<tapLog.length;i++){
+    const dur=(tapLog[i].time-tapLog[i-1].time)/1000;
+    (tapLog[i-1].type==='green'?g:r).push(dur);
+  }
+  const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):null;
+  return{green:avg(g),red:avg(r)};
+}
+
 function saveMeasure(){
-  const c=calcCycles();if(!c.green&&!c.red){toast('신호를 더 측정해주세요');return;}
+  const c=calcCycles();
+  if(!c.green&&!c.red){toast('신호를 더 측정해주세요');return;}
   if(liveIv){clearInterval(liveIv);liveIv=null;}
-  if(isRem){const s=sigs.find(s=>s.id===editId);if(s){if(c.green)s.green=c.green;if(c.red)s.red=c.red;s.startType=tapLog[0].type;s.startTime=tapLog[0].time;save();toast('✅ 재측정 완료!');setTimeout(showHome,700);}}
-  else{sigs.push({id:Date.now(),name:document.getElementById('signalName').value.trim(),location:loc,green:c.green||30,red:c.red||30,startType:tapLog[0].type,startTime:tapLog[0].time,pinned:false,memo:'',photo:null,bus:null,alertSec:30,reports:[]});save();toast('✅ 등록 완료!');setTimeout(showHome,700);}
+  if(isRem){
+    const s=sigs.find(s=>s.id===editId);
+    if(s){if(c.green)s.green=c.green;if(c.red)s.red=c.red;s.startType=tapLog[0].type;s.startTime=tapLog[0].time;save();toast('✅ 재측정 완료!');setTimeout(showHome,700);}
+  } else {
+    sigs.push({id:Date.now(),name:document.getElementById('signalName').value.trim(),location:loc,green:c.green||30,red:c.red||30,startType:tapLog[0].type,startTime:tapLog[0].time,pinned:false,memo:'',photo:null,alertSec:30,alertOn:false,reports:[]});
+    save();toast('✅ 등록 완료!');setTimeout(showHome,700);
+  }
 }
 
 // ── RENDER ──
 function render(){
-  const list=document.getElementById('signalList'),empty=document.getElementById('emptyState');
+  const list=document.getElementById('signalList');
+  const empty=document.getElementById('emptyState');
   list.querySelectorAll('.card-wrapper').forEach(c=>c.remove());
   if(!sigs.length){empty.style.display='flex';return;}
   empty.style.display='none';
   const sorted=[...sigs].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
-  sorted.forEach(s=>{const w=makeCard(s);list.appendChild(w);updateCard(s);});
+  sorted.forEach(s=>{list.appendChild(makeCard(s));updateCard(s);});
   initDrag();
 }
 
 function makeCard(sig){
   const w=document.createElement('div');
-  w.className='card-wrapper';w.dataset.id=sig.id;
-  const handle=document.createElement('div');handle.className='drag-handle';handle.innerHTML='≡';w.appendChild(handle);
-  const card=document.createElement('div');card.className='signal-card';card.id='card-'+sig.id;
+  w.className='card-wrapper'; w.dataset.id=sig.id;
 
-  const busHtml = sig.bus ? `<div class="bus-strip" id="bus-strip-${sig.id}"><div class="bus-loading">버스 정보 불러오는 중...</div></div>` : '';
+  const handle=document.createElement('div');
+  handle.className='drag-handle'; handle.innerHTML='≡';
+  w.appendChild(handle);
 
+  const card=document.createElement('div');
+  card.className='signal-card'; card.id='card-'+sig.id;
   card.innerHTML=`
     ${sig.pinned?'<div class="pin-badge">📌 고정됨</div>':''}
     <div class="card-top">
@@ -448,7 +459,7 @@ function makeCard(sig){
         ${sig.photo?`<img class="card-photo" src="${sig.photo}">`:''}
         <div class="card-name">${sig.name}</div>
       </div>
-      <button class="card-del" onclick="event.stopPropagation();delSig(${sig.id})">✕</button>
+      <button class="alert-toggle ${sig.alertOn?'on':''}" onclick="event.stopPropagation();toggleAlert(${sig.id})">🔔</button>
     </div>
     <div class="card-status">
       <div class="status-dot"></div>
@@ -460,21 +471,23 @@ function makeCard(sig){
       ${sig.red?`<div class="cycle-badge r">빨간불 ${sig.red}초</div>`:''}
     </div>
     ${sig.memo?`<div class="card-memo">${sig.memo}</div>`:''}
-    ${busHtml}
+    <button class="card-del" onclick="event.stopPropagation();delSig(${sig.id})">✕</button>
   `;
-  card.addEventListener('click',()=>{if(!reorderMode)openSheet(sig.id);});
-  w.appendChild(card);return w;
+  card.addEventListener('click', ()=>{ if(!editModeOn) openSheet(sig.id); });
+  w.appendChild(card);
+  return w;
 }
 
-// ── SIGNAL STATUS ──
+// ── STATUS ──
 function updateCard(sig){
-  const card=document.getElementById('card-'+sig.id);if(!card)return;
+  const card=document.getElementById('card-'+sig.id); if(!card)return;
   const{type,rem}=curSig(sig);
   card.className='signal-card '+type;
   document.getElementById('st-'+sig.id).textContent=type==='green'?'파란불':'빨간불';
   document.getElementById('rm-'+sig.id).textContent=rem!==null?`${rem}초 후 바뀜`:'';
-  scheduleAlert(sig,type,rem);
+  if(sig.alertOn) scheduleAlert(sig,type,rem);
 }
+
 function curSig(sig){
   const total=(sig.green||30)+(sig.red||30);
   const elapsed=((Date.now()-sig.startTime)/1000)%total;
@@ -484,254 +497,100 @@ function curSig(sig){
   else{type=sig.startType==='green'?'red':'green';rem=Math.round(fd+(sig.startType==='green'?sig.red:sig.green)-elapsed);}
   return{type,rem};
 }
+
 function tick(){
-  Object.values(timers).forEach(t=>clearInterval(t));timers={};
+  Object.values(timers).forEach(t=>clearInterval(t)); timers={};
   sigs.forEach(s=>{timers[s.id]=setInterval(()=>updateCard(s),1000);});
 }
 
-// ── NOTIFICATION ALERT ──
-async function reqNotifPerm(){
-  if('Notification' in window && Notification.permission==='default'){
-    await Notification.requestPermission();
-  }
+// ── ALERT ──
+function toggleAlert(id){
+  const sig=sigs.find(s=>s.id===id); if(!sig)return;
+  sig.alertOn=!sig.alertOn; save();
+  const btn=document.querySelector(`#card-${id} .alert-toggle`);
+  if(btn) btn.classList.toggle('on',sig.alertOn);
+  toast(sig.alertOn?'🔔 알림 켜짐':'🔕 알림 꺼짐');
+  if(sig.alertOn && Notification.permission==='default') Notification.requestPermission();
 }
-reqNotifPerm();
 
 function scheduleAlert(sig,curType,rem){
-  // 빨간불이고, alertSec초 후에 파란불로 바뀔 때 알림
-  const sec = sig.alertSec || 30;
-  const id = sig.id;
-  if(curType==='red' && rem !== null && rem <= sec && rem > sec-2){
-    // 이미 알림 보냈으면 스킵 (2초 window)
-    if(alertTimers[id] && Date.now()-alertTimers[id] < 60000) return;
-    alertTimers[id] = Date.now();
-    if(Notification.permission==='granted'){
-      new Notification('🟢 곧 파란불!', {
-        body: `${sig.name} — ${rem}초 후 파란불로 바뀌어요. 지금 나가세요!`,
-        icon: '🚦'
-      });
-    }
+  const sec=sig.alertSec||30;
+  const id=sig.id;
+  if(curType==='red'&&rem!==null&&rem<=sec&&rem>sec-2){
+    if(alertTimers[id]&&Date.now()-alertTimers[id]<60000)return;
+    alertTimers[id]=Date.now();
     toast(`🟢 ${sig.name} — ${rem}초 후 파란불!`);
+    if(Notification.permission==='granted'){
+      new Notification('🟢 곧 파란불!',{body:`${sig.name} — ${rem}초 후 파란불로 바뀌어요!`});
+    }
   }
 }
 
-// ── BUS API ──
-async function fetchBusArrival(stId, lines){
-  const url = `http://ws.bus.go.kr/api/rest/stationinfo/getStationByUid?serviceKey=${BUS_API_KEY}&arsId=${stId}&resultType=json`;
-  try {
-    const res = await fetch(CORS_PROXY + encodeURIComponent(url));
-    const text = await res.text();
-    // parse JSON or XML
-    let items = [];
-    try {
-      const j = JSON.parse(text);
-      items = j.msgBody?.itemList || [];
-    } catch {
-      // XML fallback
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(text,'text/xml');
-      items = [...xml.querySelectorAll('itemList')].map(el=>{
-        const get=tag=>el.querySelector(tag)?.textContent||'';
-        return {rtNm:get('rtNm'),arrmsg1:get('arrmsg1'),arrmsg2:get('arrmsg2')};
-      });
-    }
-    return items.filter(it=>!lines||lines.length===0||lines.includes(it.rtNm));
-  } catch(e) {
-    return null;
-  }
-}
-
-async function refreshBusCard(sig){
-  if(!sig.bus) return;
-  const strip = document.getElementById('bus-strip-'+sig.id);
-  if(!strip) return;
-  const items = await fetchBusArrival(sig.bus.stId, sig.bus.lines);
-  if(!items){ strip.innerHTML='<div class="bus-loading">버스 정보를 불러올 수 없어요</div>'; return; }
-  if(!items.length){ strip.innerHTML='<div class="bus-loading">연동된 버스가 없어요</div>'; return; }
-
-  const {type,rem} = curSig(sig);
-  const alertSec = sig.alertSec||30;
-
-  strip.innerHTML = items.slice(0,3).map(it=>{
-    // parse arrmsg1 e.g. "3분20초후[5번째전]"
-    const msg = it.arrmsg1||'정보없음';
-    const secMatch = msg.match(/(\d+)분(\d+)초/)||msg.match(/(\d+)분/)||msg.match(/(\d+)초/);
-    let arrSec = null;
-    if(msg.match(/(\d+)분(\d+)초/)){const m=msg.match(/(\d+)분(\d+)초/);arrSec=parseInt(m[1])*60+parseInt(m[2]);}
-    else if(msg.match(/(\d+)분/)){arrSec=parseInt(msg.match(/(\d+)분/)[1])*60;}
-    // check if green timing matches bus arrival
-    let hint='';
-    if(arrSec!==null && type==='red' && rem!==null){
-      const greenAt = rem; // seconds until green
-      const diff = Math.abs(arrSec - greenAt);
-      if(diff<=15) hint='<span class="bus-alert-ok">✅ 파란불 타이밍 딱!</span>';
-    }
-    return `<div class="bus-row"><span class="bus-num">${it.rtNm}</span><span class="bus-arrive">${msg}</span>${hint}</div>`;
-  }).join('');
-}
-
-function startBusRefresh(){
-  Object.values(busTimers).forEach(t=>clearInterval(t)); busTimers={};
-  sigs.forEach(sig=>{
-    if(!sig.bus) return;
-    refreshBusCard(sig);
-    busTimers[sig.id]=setInterval(()=>refreshBusCard(sig),30000);
-  });
-}
-
-// ── BUS STOP SEARCH ──
-function openBusSearch(){
-  closeSheet();
-  document.getElementById('busSearchInput').value='';
-  document.getElementById('busStopList').innerHTML='<div class="bus-stop-empty">정류장 이름으로 검색해보세요</div>';
-  document.getElementById('busSearchBack').onclick=()=>{openSheet(editId);};
-  selectedStopId=null; selectedStopName=null; tempSelectedLines=[];
-  go('busSearch');
-}
-
-async function searchBusStop(){
-  const q=document.getElementById('busSearchInput').value.trim();
-  if(!q){toast('정류장 이름을 입력해주세요');return;}
-  const list=document.getElementById('busStopList');
-  list.innerHTML='<div class="bus-stop-empty">검색 중...</div>';
-
-  const url=`http://ws.bus.go.kr/api/rest/stationinfo/getStationByName?serviceKey=${BUS_API_KEY}&stSrch=${encodeURIComponent(q)}&resultType=json`;
-  try{
-    const res=await fetch(CORS_PROXY+encodeURIComponent(url));
-    const text=await res.text();
-    let items=[];
-    try{const j=JSON.parse(text);items=j.msgBody?.itemList||[];}
-    catch{
-      const parser=new DOMParser();const xml=parser.parseFromString(text,'text/xml');
-      items=[...xml.querySelectorAll('itemList')].map(el=>({stId:el.querySelector('stId')?.textContent,stNm:el.querySelector('stNm')?.textContent,arsId:el.querySelector('arsId')?.textContent}));
-    }
-    if(!items.length){list.innerHTML='<div class="bus-stop-empty">검색 결과가 없어요</div>';return;}
-    list.innerHTML=items.slice(0,20).map(it=>`
-      <div class="bus-stop-item" onclick="selectBusStop('${it.arsId||it.stId}','${(it.stNm||'').replace(/'/g,"\\'")}')">
-        <div class="bus-stop-name">${it.stNm||'이름없음'}</div>
-        <div class="bus-stop-id">정류장 ID: ${it.arsId||it.stId}</div>
-      </div>
-    `).join('');
-  }catch(e){
-    list.innerHTML='<div class="bus-stop-empty">API 연결 실패 — 잠시 후 다시 시도해주세요</div>';
-  }
-}
-document.getElementById('busSearchInput').addEventListener('keydown',e=>{if(e.key==='Enter')searchBusStop();});
-
-async function selectBusStop(stId, stNm){
-  selectedStopId=stId; selectedStopName=stNm;
-  document.getElementById('busLineTitle').textContent=stNm+' 노선';
-  const lineList=document.getElementById('busLineList');
-  lineList.innerHTML='<div class="bus-stop-empty">노선 불러오는 중...</div>';
-  tempSelectedLines=[];
-
-  const sig=sigs.find(s=>s.id===editId);
-  if(sig?.bus?.stId===stId) tempSelectedLines=[...sig.bus.lines];
-
-  go('busLineSelect');
-
-  const url=`http://ws.bus.go.kr/api/rest/stationinfo/getStationByUid?serviceKey=${BUS_API_KEY}&arsId=${stId}&resultType=json`;
-  try{
-    const res=await fetch(CORS_PROXY+encodeURIComponent(url));
-    const text=await res.text();
-    let items=[];
-    try{const j=JSON.parse(text);items=j.msgBody?.itemList||[];}
-    catch{
-      const parser=new DOMParser();const xml=parser.parseFromString(text,'text/xml');
-      items=[...xml.querySelectorAll('itemList')].map(el=>({rtNm:el.querySelector('rtNm')?.textContent,nxtStn:el.querySelector('nxtStn')?.textContent}));
-    }
-    const unique=[...new Map(items.map(it=>[it.rtNm,it])).values()];
-    lineList.innerHTML=unique.map(it=>{
-      const sel=tempSelectedLines.includes(it.rtNm);
-      return`<div class="bus-line-item ${sel?'bus-line-selected':''}" onclick="toggleLine('${it.rtNm}',this)">
-        <span class="bus-line-num">${it.rtNm}</span>
-        <span class="bus-line-dest">→ ${it.nxtStn||''}</span>
-        ${sel?'<span class="bus-line-check">✓</span>':''}
-      </div>`;
-    }).join('');
-  }catch(e){lineList.innerHTML='<div class="bus-stop-empty">노선 정보를 불러올 수 없어요</div>';}
-}
-
-function toggleLine(rtNm, el){
-  if(tempSelectedLines.includes(rtNm)){
-    tempSelectedLines=tempSelectedLines.filter(l=>l!==rtNm);
-    el.classList.remove('bus-line-selected');
-    el.querySelector('.bus-line-check')?.remove();
-  } else {
-    tempSelectedLines.push(rtNm);
-    el.classList.add('bus-line-selected');
-    if(!el.querySelector('.bus-line-check')){const s=document.createElement('span');s.className='bus-line-check';s.textContent='✓';el.appendChild(s);}
-  }
-}
-
-function saveBusLines(){
-  const sig=sigs.find(s=>s.id===editId);
-  if(!sig){toast('오류가 발생했어요');return;}
-  sig.bus={stId:selectedStopId,stNm:selectedStopName,lines:tempSelectedLines};
-  save(); toast('🚌 버스 연동 완료!');
-  openSheet(editId);
-  // refresh bus data
-  setTimeout(()=>{refreshBusCard(sig);if(busTimers[sig.id])clearInterval(busTimers[sig.id]);busTimers[sig.id]=setInterval(()=>refreshBusCard(sig),30000);},500);
-}
-
-// ── REORDER ──
-function exitReorder(){reorderMode=false;document.body.classList.remove('reorder');render();tick();}
+// ── DRAG ──
 function initDrag(){
   const list=document.getElementById('signalList');
   list.querySelectorAll('.drag-handle').forEach(handle=>{
     const w=handle.closest('.card-wrapper');
     let startY=0,cloneEl=null,placeholder=null;
     handle.addEventListener('touchstart',e=>{
-      if(!reorderMode)return;e.preventDefault();startY=e.touches[0].clientY;
+      if(!reorderMode)return; e.preventDefault();
+      startY=e.touches[0].clientY;
       const rect=w.getBoundingClientRect();
-      placeholder=document.createElement('div');placeholder.style.cssText=`height:${rect.height}px;opacity:0;pointer-events:none;`;w.after(placeholder);
-      cloneEl=w.cloneNode(true);cloneEl.style.cssText=`position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;z-index:999;opacity:0.85;pointer-events:none;box-shadow:0 12px 32px rgba(0,0,0,0.18);border-radius:16px;transition:none;`;
-      document.body.appendChild(cloneEl);w.style.opacity='0';
+      placeholder=document.createElement('div');
+      placeholder.style.cssText=`height:${rect.height}px;opacity:0;pointer-events:none;`;
+      w.after(placeholder);
+      cloneEl=w.cloneNode(true);
+      cloneEl.style.cssText=`position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;z-index:999;opacity:0.85;pointer-events:none;box-shadow:0 12px 32px rgba(0,0,0,0.18);border-radius:16px;`;
+      document.body.appendChild(cloneEl); w.style.opacity='0';
     },{passive:false});
     handle.addEventListener('touchmove',e=>{
-      if(!reorderMode||!cloneEl)return;e.preventDefault();
-      cloneEl.style.top=(parseFloat(cloneEl.style.top)+e.touches[0].clientY-startY)+'px';startY=e.touches[0].clientY;
-      const cy=e.touches[0].clientY;const siblings=[...list.querySelectorAll('.card-wrapper')].filter(x=>x!==w);
-      let before=null;for(const s of siblings){const r=s.getBoundingClientRect();if(cy<r.top+r.height/2){before=s;break;}}
+      if(!reorderMode||!cloneEl)return; e.preventDefault();
+      cloneEl.style.top=(parseFloat(cloneEl.style.top)+e.touches[0].clientY-startY)+'px';
+      startY=e.touches[0].clientY;
+      const cy=e.touches[0].clientY;
+      const siblings=[...list.querySelectorAll('.card-wrapper')].filter(x=>x!==w);
+      let before=null;
+      for(const s of siblings){const r=s.getBoundingClientRect();if(cy<r.top+r.height/2){before=s;break;}}
       if(before)list.insertBefore(placeholder,before);else list.appendChild(placeholder);
     },{passive:false});
-    handle.addEventListener('touchend',e=>{
-      if(!reorderMode||!cloneEl)return;cloneEl.remove();cloneEl=null;w.style.opacity='';list.insertBefore(w,placeholder);placeholder.remove();placeholder=null;
+    handle.addEventListener('touchend',()=>{
+      if(!reorderMode||!cloneEl)return;
+      cloneEl.remove();cloneEl=null;w.style.opacity='';
+      list.insertBefore(w,placeholder);placeholder.remove();placeholder=null;
       const newOrder=[...list.querySelectorAll('.card-wrapper')].map(x=>parseInt(x.dataset.id));
-      sigs.sort((a,b)=>newOrder.indexOf(a.id)-newOrder.indexOf(b.id));save();render();tick();
+      sigs.sort((a,b)=>newOrder.indexOf(a.id)-newOrder.indexOf(b.id));
+      save();
     });
-  });
-  list.querySelectorAll('.card-wrapper').forEach(w=>{
-    let lt=null;
-    w.addEventListener('touchstart',()=>{lt=setTimeout(()=>{reorderMode=true;document.body.classList.add('reorder');toast('순서 편집 모드 — 핸들을 잡고 드래그하세요');},600);},{passive:true});
-    w.addEventListener('touchend',()=>clearTimeout(lt));
-    w.addEventListener('touchmove',()=>clearTimeout(lt));
   });
 }
 
 // ── SHEET ──
 function openSheet(id){
   editId=id;
-  const sig=sigs.find(s=>s.id===id);if(!sig)return;
+  const sig=sigs.find(s=>s.id===id); if(!sig)return;
   document.getElementById('sheetTitle').textContent=sig.name;
   document.getElementById('editName').value=sig.name;
   document.getElementById('editMemo').value=sig.memo||'';
   document.getElementById('alertSec').value=sig.alertSec||30;
-  pendPhoto=null;refreshPhoto(sig.photo);
+  pendPhoto=null; refreshPhoto(sig.photo);
   const pb=document.getElementById('pinBtn');
   pb.textContent=sig.pinned?'📌 고정 해제':'📌 홈 화면 상단 고정';
   pb.className='sheet-btn'+(sig.pinned?' pin-on':'');
-  const bb=document.getElementById('busLinkBtn');
-  bb.textContent=sig.bus?`🚌 버스 연동됨 (${sig.bus.stNm})`:'🚌 버스 연동 설정';
   document.getElementById('sheet').classList.add('open');
 }
+
 function closeSheet(){
-  const s=document.querySelector('.sheet');s.style.transform='';
+  const s=document.querySelector('.sheet'); s.style.transform='';
   document.getElementById('sheet').classList.remove('open');
 }
-document.getElementById('sheet').addEventListener('click',e=>{if(e.target===document.getElementById('sheet'))closeSheet();});
+
+document.getElementById('sheet').addEventListener('click',e=>{
+  if(e.target===document.getElementById('sheet'))closeSheet();
+});
+
 (function(){
-  const sheet=document.querySelector('.sheet');let startY=0,curY=0,active=false;
+  const sheet=document.querySelector('.sheet');
+  let startY=0,curY=0,active=false;
   sheet.addEventListener('touchstart',e=>{if(sheet.scrollTop>4)return;startY=e.touches[0].clientY;curY=startY;active=true;sheet.style.transition='none';},{passive:true});
   sheet.addEventListener('touchmove',e=>{if(!active)return;curY=e.touches[0].clientY;const dy=Math.max(0,curY-startY);sheet.style.transform=`translateY(${dy}px)`;},{passive:true});
   sheet.addEventListener('touchend',()=>{if(!active)return;active=false;sheet.style.transition='transform 0.25s ease';if(curY-startY>80)closeSheet();else sheet.style.transform='';});
@@ -743,24 +602,50 @@ function refreshPhoto(src){
   else{prev.style.display='none';empty.style.display='flex';}
 }
 function delPhoto(){pendPhoto='__del__';refreshPhoto(null);}
-function onPhoto(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{pendPhoto=ev.target.result;refreshPhoto(pendPhoto);};r.readAsDataURL(f);e.target.value='';}
+function onPhoto(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{pendPhoto=ev.target.result;refreshPhoto(pendPhoto);};
+  r.readAsDataURL(f);e.target.value='';
+}
 
 function saveEdit(){
   const sig=sigs.find(s=>s.id===editId);if(!sig)return;
-  const n=document.getElementById('editName').value.trim();if(!n){toast('이름을 입력해주세요');return;}
-  sig.name=n;sig.memo=document.getElementById('editMemo').value.trim();
+  const n=document.getElementById('editName').value.trim();
+  if(!n){toast('이름을 입력해주세요');return;}
+  sig.name=n; sig.memo=document.getElementById('editMemo').value.trim();
   sig.alertSec=parseInt(document.getElementById('alertSec').value)||30;
-  if(pendPhoto==='__del__')sig.photo=null;else if(pendPhoto)sig.photo=pendPhoto;
-  pendPhoto=null;save();closeSheet();render();tick();startBusRefresh();toast('✅ 저장됐어요');
+  if(pendPhoto==='__del__')sig.photo=null;
+  else if(pendPhoto)sig.photo=pendPhoto;
+  pendPhoto=null;
+  save();closeSheet();render();tick();toast('✅ 저장됐어요');
 }
-function togglePin(){const sig=sigs.find(s=>s.id===editId);if(!sig)return;sig.pinned=!sig.pinned;save();const pb=document.getElementById('pinBtn');pb.textContent=sig.pinned?'📌 고정 해제':'📌 홈 화면 상단 고정';pb.className='sheet-btn'+(sig.pinned?' pin-on':'');toast(sig.pinned?'📌 상단에 고정됐어요':'고정 해제됐어요');}
+
+function togglePin(){
+  const sig=sigs.find(s=>s.id===editId);if(!sig)return;
+  sig.pinned=!sig.pinned;save();
+  const pb=document.getElementById('pinBtn');
+  pb.textContent=sig.pinned?'📌 고정 해제':'📌 홈 화면 상단 고정';
+  pb.className='sheet-btn'+(sig.pinned?' pin-on':'');
+  toast(sig.pinned?'📌 상단에 고정됐어요':'고정 해제됐어요');
+}
+
 function remeasure(){goMeasure(true);}
 function delFromSheet(){closeSheet();delSig(editId);}
-function delSig(id){sigs=sigs.filter(s=>s.id!==id);save();if(timers[id]){clearInterval(timers[id]);delete timers[id];}if(busTimers[id]){clearInterval(busTimers[id]);delete busTimers[id];}render();toast('삭제됐어요');}
-function report(reason){const sig=sigs.find(s=>s.id===editId);if(sig){sig.reports=sig.reports||[];sig.reports.push({reason,time:Date.now()});save();toast('신고 접수됐어요 🙏');}closeSheet();}
+
+function delSig(id){
+  sigs=sigs.filter(s=>s.id!==id);
+  save();if(timers[id]){clearInterval(timers[id]);delete timers[id];}
+  render();toast('삭제됐어요');
+}
 
 function save(){localStorage.setItem('sigs',JSON.stringify(sigs));}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2500);}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2200);
+}
 
 showHome();
 </script>
